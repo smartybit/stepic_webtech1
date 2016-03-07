@@ -7,9 +7,13 @@ sudo touch  /home/box/web/public/js/test.js
 sudo rm  /etc/nginx/sites-enabled/default
 sudo ln -s /home/box/stepic_webtech1/web/etc/nginx.conf  /etc/nginx/sites-enabled/test.conf
 sudo ln -s /home/box/stepic_webtech1/web/etc/hello.py  /etc/gunicorn.d/hello.py
-sudo ln -s /home/box/stepic_webtech1/web/hello.py  /home/box/web/hello.py
+sudo ln -s /home/box/stepic_webtech1/web/etc/ask.py    /etc/gunicorn.d/ask.py
+sudo ln -s /home/box/stepic_webtech1/web/    /home/box/web
 
 cd /home/box/stepic_webtech1/web
 gunicorn -c /etc/gunicorn.d/hello.py hello:app&
+
+cd /home/box/stepic_webtech1/web/ask/ask
+gunicorn -c /etc/gunicorn.d/ask.py wsgi:application&
 
 sudo nginx
