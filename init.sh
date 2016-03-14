@@ -20,6 +20,9 @@ sudo ln -s /home/box/stepic_webtech1/web/hello.py   /home/box/web/
 
 sudo /etc/init.d/mysql start
 sudo mysql -uroot -e "create database ask"
+python /home/box/stepic_webtech1/web/ask/ask/manage.py syncdb --noinput
+
+
 sudo /etc/init.d/gunicorn start
 
 sudo nginx
