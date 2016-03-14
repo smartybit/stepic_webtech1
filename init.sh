@@ -17,6 +17,9 @@ sudo ln -s /home/box/stepic_webtech1/web/hello.py   /home/box/web/
 #cd /home/box/stepic_webtech1/web/ask/ask
 #gunicorn -c /etc/gunicorn.d/ask.py wsgi:application&
 
+
+sudo /etc/init.d/mysql start
+sudo mysql -uroot -e "create database ask"
 sudo /etc/init.d/gunicorn start
 
 sudo nginx
