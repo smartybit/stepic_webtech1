@@ -7,6 +7,7 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^$', 'qa.views.mainpage'),
+    url(r'^createdata/?$', 'qa.views.createdata'),
     url(r'^login/?$', 'qa.views.test'),
     url(r'^signup/?$', 'qa.views.test'),
     url(r'^question\/\d*\/?$', 'qa.views.test'),
