@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="utf-8">
+      <title>title</title>
+<!--      <link rel="stylesheet" href="style.css">
+          <script src="script.js"></script>
+-->
+  </head>
+  <body>
+                          <!-- page content -->
+
+
+
+<nav><ul class="pagination">
+{% for p in paginator.page_range %}
+    {% if p.number == page.number %}
+        <li class="active">
+    {% else %}
+        <li> {{ p.has_next }} of {{ paginator.num_pages }} 
+    {% endif %}
+    
+    <a href="{{ paginator.baseurl }}{{ p.number }}"> {{ p.number }}</a>
+    </li>
+{% endfor %}
+</ul></nav>
+
+{% for q in page.object_list %}
+    <h1>q.title</h1>
+    <h4>q.text</h4>
+
+      </body>
+</html>
