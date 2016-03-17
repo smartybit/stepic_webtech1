@@ -11,7 +11,7 @@ def test(request, *args, **kwargs):
 
 
 def mainpage(request, *args, **kwargs):
-    question_set = models.Question.objects.order_by('-added_at', '-raiting')
+    question_set = models.Question.objects.order_by('-added_at', '-rating')
 
     paginator, page = paginate(request, question_set)
     paginator.baseurl = '/?page='
@@ -20,7 +20,7 @@ def mainpage(request, *args, **kwargs):
         'page': page})
 
 def popular(request, *args, **kwargs):
-    question_set = models.Question.objects.order_by('-raiting', '-added_at')
+    question_set = models.Question.objects.order_by('-rating', '-added_at')
 
     paginator, page = paginate(request, question_set)
     paginator.baseurl = '/popular/?page='
