@@ -23,7 +23,7 @@
 {% endfor %}</span></nav>
 
 {% for q in page.object_list %}
-    <h3><a href="/question/{{q.id}}/">{{ q.title }} from {{ q.author }} (raiting {{ q.raiting }})</a></h1>  
+    <h3><a href="/question/{{q.id}}/">{{ q.title }} from {{ q.author }} (rating {{ q.rating }})</a></h1>  
     <div>at {{ q.added_at }} </div> 
     <h4>{{ q.text }}</h4>
 {% endfor %}
