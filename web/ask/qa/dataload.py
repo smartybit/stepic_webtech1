@@ -19,7 +19,7 @@ def createdata():
         numstr = repr(i)
         question = Question(title='Question #' + numstr, text = 'Question text #' + numstr, author = user)
         question.added_at = datetime.now()
-        question.raiting = 10 - i
+        question.rating = 10 - i
         question.save()
         questions += [question]
 
