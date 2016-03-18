@@ -1,11 +1,12 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
+from django.views.decorators.http import require_POST, require_GET
 
 from django.http import HttpResponse, HttpResponseRedirect 
 import qa.dataload as dataload
 import qa.models as models
 from  qa.pagination import paginate
-from forms import QuestionForm
+from forms import AskForm, AnswerForm
 
 
 
@@ -35,23 +36,37 @@ def question (request, *args, **kwargs):
 
     try: q_id = int(kwargs['question_id'])
     except: q_id = -1
+    q_id = int(kwargs['question_id'])
     question = get_object_or_404(models.Question, id = q_id)
     try: 
         answers = models.Answer.objects.filter(question_id = q_id).order_by('-added_at')
     except:
         answers = None
+    if 'form' in kwargs:
+        form = kwargs['form']
+    else:
+        form = AnswerForm(initial={'question_id': q_id, 'author_id' : 2})
     return render(request, 'question.html', {'question': question, 
-        'answers': answers, })
-    
+        'answers': answers, 'form' : form, })
 
-def newquestion (request, *args, **kwargs):
+@require_POST
+def newanswer (request, *args, **kwargs):
+    form = AnswerForm(request.POST)
+    if form.is_valid():
+        question_id = form.save()
+        return HttpResponseRedirect(reverse('question', kwargs={'question_id': question_id}))
+    else:
+        deb = form.get_question_id()
+        return question(request, **{'form' : form, 'question_id': form.get_question_id()})
+
+def newquestion(request, *args, **kwargs):
     if request.method == 'POST':
-        form = QuestionForm(request.POST)
+        form = AskForm(request.POST)
         if form.is_valid():
             question_id = form.save()
             return HttpResponseRedirect(reverse('question', kwargs={'question_id': question_id}))
     else:
-        form = QuestionForm()
+        form = AskForm()
     return render(request, 'newquestion.html', {'form': form})
 
 def createdata(request, *args, **kwargs):
