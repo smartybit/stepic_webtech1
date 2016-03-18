@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
+from django.core.urlresolvers import reverse
 
-from django.http import HttpResponse 
+from django.http import HttpResponse, HttpResponseRedirect 
 import qa.dataload as dataload
 import qa.models as models
 from  qa.pagination import paginate
@@ -47,9 +48,10 @@ def newquestion (request, *args, **kwargs):
     if request.method == 'POST':
         form = QuestionForm(request.POST)
         if form.is_valid():
-            return HttpResponseRedirect('/contact/thanks/')
+            question_id = form.save()
+            return HttpResponseRedirect(reverse('question', kwargs={'question_id': question_id}))
     else:
-        form = ContactForm()
+        form = QuestionForm()
     return render(request, 'newquestion.html', {'form': form})
 
 def createdata(request, *args, **kwargs):
