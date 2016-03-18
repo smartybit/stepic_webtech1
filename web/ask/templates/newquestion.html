@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="utf-8">
+      <title>title</title>
+<!--      <link rel="stylesheet" href="style.css">
+          <script src="script.js"></script>
+-->
+  </head>
+  <body>
+                          <!-- page content -->
+
+
+    <h3>Enter your question:</h3>
+    {% if form.errors %}
+        <p style="color: red;">
+        Please correct the error{{ form.errors|pluralize }} below.
+        </p>
+    {% endif %}
+     <form action="" method="post">
+        <table>
+        {{ form.as_table }}
+        </table>
+        {% csrf_token %}
+        <input type="submit" value="Submit">
+     </form>
+
+      </body>
+</html>

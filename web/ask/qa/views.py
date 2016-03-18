@@ -4,6 +4,8 @@ from django.http import HttpResponse
 import qa.dataload as dataload
 import qa.models as models
 from  qa.pagination import paginate
+from forms import QuestionForm
+
 
 
 def test(request, *args, **kwargs):
@@ -41,6 +43,14 @@ def question (request, *args, **kwargs):
         'answers': answers, })
     
 
+def newquestion (request, *args, **kwargs):
+    if request.method == 'POST':
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            return HttpResponseRedirect('/contact/thanks/')
+    else:
+        form = ContactForm()
+    return render(request, 'newquestion.html', {'form': form})
 
 def createdata(request, *args, **kwargs):
     dataload.createdata()
