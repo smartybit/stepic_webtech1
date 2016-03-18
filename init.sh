@@ -26,5 +26,5 @@ python /home/box/stepic_webtech1/web/ask/manage.py syncdb --noinput
 sudo /etc/init.d/gunicorn start
 
 sudo nginx
-
+sleep 1 
 curl 127.0.0.1/createdata/
