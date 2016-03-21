@@ -48,26 +48,16 @@ class AnswerForm(forms.Form):
 
 class SignupForm(UserCreationForm):
     
-    email = forms.EmailField(required=True)
     class Meta:
         model = User
         fields = ("username", "email")
 
-#    def clean_username(self):
-#        theuser = super(UserCreationForm, self).save(commit=False)
-#        username = theuser.username
-#        raise username
-#        username = username.strip()
-#        if 
-#        if  User.objects.filter(username__iexact=username).first() != None:
-#            raise forms.ValidationError("This login is already in use")
-#        return username
 
     def clean_email(self):
-#        email = super(UserCreationForm, self).clean_email()
-        #user = super(UserCreationForm, self).save(commit=False)
-        ce = self.cleaned_data
-        email = self.cleaned_data["email"] 
+        email = self.cleaned_data["email"]
+        if not email:
+            raise forms.ValidationError("Email is required!")
+
         if  User.objects.filter(email__iexact=email).first() != None:
             raise forms.ValidationError("This email is already in use ;-)")
         return email
