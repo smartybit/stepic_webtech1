@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.views.decorators.http import require_POST, require_GET
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, HttpResponseRedirect
 
-from django.http import HttpResponse, HttpResponseRedirect 
 import qa.dataload as dataload
 import qa.models as models
 from  qa.pagination import paginate
@@ -60,6 +61,7 @@ def question (request, *args, **kwargs):
         'answers': answers, 'form' : form, })
 
 @require_POST
+@login_required
 def newanswer (request, *args, **kwargs):
     form = AnswerForm(request.POST)
     if form.is_valid():
@@ -68,6 +70,7 @@ def newanswer (request, *args, **kwargs):
     else:
         return question(request, **{'form' : form, 'question_id': form.get_question_id()})
 
+@login_required
 def newquestion(request, *args, **kwargs):
     if request.method == 'POST':
         form = AskForm(request.POST)
