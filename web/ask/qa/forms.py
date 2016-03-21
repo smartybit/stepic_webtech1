@@ -29,7 +29,7 @@ class AskForm(forms.Form):
 class AnswerForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea)
     question_id = forms.CharField(widget=forms.HiddenInput())
-
+    user = User()
     def get_question_id(self):
         return self.cleaned_data['question_id']
        
@@ -42,7 +42,9 @@ class AnswerForm(forms.Form):
 
     def save(self):
         answer = models.Answer(**self.cleaned_data)
-        answer.author_id = 1
+        if not user.is_authenticated():
+            raise Exception('User not authenticated')
+        answer.author = user
         answer.save()
         return self.cleaned_data['question_id']
 
@@ -65,6 +67,7 @@ class SignupForm(UserCreationForm):
     def save(self, commit = True):
         user = super(UserCreationForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
+        user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()
         return user

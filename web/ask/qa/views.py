@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from django.views.decorators.http import require_POST, require_GET
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.views import login
 
 import qa.dataload as dataload
 import qa.models as models
@@ -24,6 +25,11 @@ def signup(request, *args, **kwargs):
         form = SignupForm()
     return render(request, 'signup.html', {'form' : form })
 
+def qa_login(request, **kwargs):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('mainpage'))
+    else:
+        return login(request, kwargs)
 
 def mainpage(request, *args, **kwargs):
     question_set = models.Question.objects.order_by('-added_at', '-rating')
@@ -56,7 +62,10 @@ def question (request, *args, **kwargs):
     if 'form' in kwargs:
         form = kwargs['form']
     else:
-        form = AnswerForm(initial={'question_id': q_id, 'author_id' : 2})
+        if request.user.is_authenticated():
+            form = AnswerForm(initial={'question_id': q_id,  'user': request.user})
+        else: form = None
+
     return render(request, 'question.html', {'question': question, 
         'answers': answers, 'form' : form, })
 
@@ -64,6 +73,7 @@ def question (request, *args, **kwargs):
 @login_required
 def newanswer (request, *args, **kwargs):
     form = AnswerForm(request.POST)
+    form.user = request.user
     if form.is_valid():
         question_id = form.save()
         return HttpResponseRedirect(reverse('question', kwargs={'question_id': question_id}))

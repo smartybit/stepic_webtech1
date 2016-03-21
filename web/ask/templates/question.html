@@ -27,7 +27,8 @@
 {% endif %}
 
 
-    <h3>Give your answer:</h3>
+{% if form %}
+    <h3>Give your answer as {{ user.username }}:</h3>
     {% if form.errors %}
         <p style="color: red;">
         Please correct the error{{ form.errors|pluralize }} below.
@@ -40,7 +41,7 @@
         {% csrf_token %}
         <input type="submit" value="Submit">
      </form>
-
+{% endif  %}
 
       </body>
 </html>
