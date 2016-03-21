@@ -6,7 +6,8 @@ import models as models
 class AskForm(forms.Form):
     title = forms.CharField(max_length=255)
     text = forms.CharField(widget=forms.Textarea)
-    
+    user = User()
+
     def clean_title(self):
         title = self.cleaned_data['title'].strip()
         if len(title) == 0:
@@ -22,7 +23,9 @@ class AskForm(forms.Form):
 
     def save(self):
         question = models.Question(**self.cleaned_data)
-        question.author_id = 1
+        if not self.user.is_authenticated():
+            raise Exception('User not authenticated')
+        question.author = self.user
         question.save()
         return question.id
 
@@ -42,9 +45,9 @@ class AnswerForm(forms.Form):
 
     def save(self):
         answer = models.Answer(**self.cleaned_data)
-        if not user.is_authenticated():
+        if not self.user.is_authenticated():
             raise Exception('User not authenticated')
-        answer.author = user
+        answer.author = self.user
         answer.save()
         return self.cleaned_data['question_id']
 

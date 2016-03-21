@@ -91,8 +91,9 @@ def newquestion(request, *args, **kwargs):
     if request.method == 'POST':
         form = AskForm(request.POST)
         if form.is_valid():
+            form.user = request.user
             question_id = form.save()
-            return HttpResponseRedirect(reverse('question', kwargs={'question_id': question_id}))
+            return HttpResponseRedirect(reverse('question', kwargs={'question_id': question_id, }))
     else:
         form = AskForm()
     return render(request, 'newquestion.html', {'form': form})
