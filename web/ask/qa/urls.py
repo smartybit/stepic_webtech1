@@ -13,5 +13,6 @@ urlpatterns = patterns('',
     url(r'^newanswer/?$', 'qa.views.newanswer'),
     url(r'^createdata/?$', 'qa.views.createdata'),
     url(r'^login/$', 'qa.views.qa_login',  {'template_name': 'admin/login.html'}),
+    url(r'^logout/$', 'qa.views.logout',),
     url(r'^signup/?$', 'qa.views.signup'),
 )

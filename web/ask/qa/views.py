@@ -31,6 +31,12 @@ def qa_login(request, **kwargs):
     else:
         return login(request, kwargs)
 
+def logout(request, **kwargs):
+    if request.user.is_authenticated():
+        request.session.flush()
+    return HttpResponseRedirect(reverse('mainpage'))
+
+
 def mainpage(request, *args, **kwargs):
     question_set = models.Question.objects.order_by('-added_at', '-rating')
 
