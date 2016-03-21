@@ -6,12 +6,22 @@ from django.http import HttpResponse, HttpResponseRedirect
 import qa.dataload as dataload
 import qa.models as models
 from  qa.pagination import paginate
-from forms import AskForm, AnswerForm
+from forms import AskForm, AnswerForm, SignupForm
 
 
 
 def test(request, *args, **kwargs):
     return HttpResponse('OK')
+
+def signup(request, *args, **kwargs):
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            return HttpResponseRedirect(reverse('mainpage'))
+    else:
+        form = SignupForm()
+    return render(request, 'signup.html', {'form' : form })
 
 
 def mainpage(request, *args, **kwargs):
@@ -56,7 +66,6 @@ def newanswer (request, *args, **kwargs):
         question_id = form.save()
         return HttpResponseRedirect(reverse('question', kwargs={'question_id': question_id}))
     else:
-        deb = form.get_question_id()
         return question(request, **{'form' : form, 'question_id': form.get_question_id()})
 
 def newquestion(request, *args, **kwargs):

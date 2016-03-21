@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 import models as models
 
 class AskForm(forms.Form):
@@ -44,4 +46,32 @@ class AnswerForm(forms.Form):
         answer.save()
         return self.cleaned_data['question_id']
 
-#form = AnswerForm(initial={'question_id': question_id})
+class SignupForm(UserCreationForm):
+
+    class Meta:
+        model = User
+        fields = ("username", "email")
+
+    def clean_username(self):
+        user = super(UserCreationForm, self).save(commit=False)
+        username = user.username
+        raise username
+        username = username.strip()
+#        if 
+#        if  User.objects.filter(username__iexact=username).first() != None:
+#            raise forms.ValidationError("This login is already in use")
+        return username
+
+    def clean_email(self):
+#        email = super(UserCreationForm, self).clean_email()
+        user = super(UserCreationForm, self).save(commit=False)
+        email = user.email 
+        if  User.objects.filter(email__iexact=email).first() != None:
+            raise forms.ValidationError("This email is already in use ;-)")
+        return email
+
+    def save(self, commit = True):
+        user = super(UserCreationForm, self).save(commit=False)
+        if commit:
+            user.save()
+        return user
