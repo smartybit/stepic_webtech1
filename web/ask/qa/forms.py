@@ -62,10 +62,15 @@ class SignupForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(UserCreationForm, self).__init__(*args, **kwargs)
         self.fields['password1'].widget.attrs["id"] = "password"
+        self.fields['password2'].blank = True
+        self.fields['password2'].required= False
 
     def add_prefix(self, field_name):
         field_name = self.FIELD_NAME_MAPPING.get(field_name, field_name)
         return super(UserCreationForm, self).add_prefix(field_name)
+
+    def clean_password2(self):
+        return self.cleaned_data.get("password1")
 
     def clean_email(self):
         email = self.cleaned_data["email"]
