@@ -52,11 +52,14 @@ class AnswerForm(forms.Form):
         return self.cleaned_data['question_id']
 
 class SignupForm(UserCreationForm):
-    
+
     class Meta:
         model = User
         fields = ("username", "email")
 
+    def __init__(self, *args, **kwargs):
+        super(UserCreationForm, self).__init__(*args, **kwargs)
+        self.fields['password1'].widget.attrs["id"] = "password"
 
     def clean_email(self):
         email = self.cleaned_data["email"]
