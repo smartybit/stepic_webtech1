@@ -2,8 +2,10 @@ from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.views.decorators.http import require_POST, require_GET
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import login as login_view
+from django.contrib.auth import authenticate, login
+
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.views import login
 
 import qa.dataload as dataload
 import qa.models as models
@@ -18,9 +20,16 @@ def test(request, *args, **kwargs):
 def signup(request, *args, **kwargs):
     if request.method == 'POST':
         form = SignupForm(request.POST)
+        username = request.POST['username']
+        password = request.POST['password']
         if form.is_valid():
             user = form.save()
-            return HttpResponseRedirect(reverse('mainpage'))
+            if user.is_active:
+                user = authenticate(username=username, password=password)
+                login(request, user)
+                return HttpResponseRedirect(reverse('mainpage'))
+            else:
+                return login_view(request, kwargs)
     else:
         form = SignupForm()
     return render(request, 'signup.html', {'form' : form })
@@ -29,7 +38,7 @@ def qa_login(request, **kwargs):
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('mainpage'))
     else:
-        return login(request, kwargs)
+        return login_view(request, **kwargs)
 
 def logout(request, **kwargs):
     if request.user.is_authenticated():
