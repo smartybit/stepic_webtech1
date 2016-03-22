@@ -9,7 +9,7 @@ def createdata():
     for i in range(3):
         user, created = User.objects.get_or_create(username='test' + repr(i))
         if created:
-            user.password = 'test'
+            user.set_password('test')
             user.save()
         users += [user]
 
