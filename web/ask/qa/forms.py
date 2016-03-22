@@ -53,6 +53,8 @@ class AnswerForm(forms.Form):
 
 class SignupForm(UserCreationForm):
 
+    FIELD_NAME_MAPPING = {'password1': 'password', }
+
     class Meta:
         model = User
         fields = ("username", "email")
@@ -60,6 +62,10 @@ class SignupForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(UserCreationForm, self).__init__(*args, **kwargs)
         self.fields['password1'].widget.attrs["id"] = "password"
+
+    def add_prefix(self, field_name):
+        field_name = self.FIELD_NAME_MAPPING.get(field_name, field_name)
+        return super(UserCreationForm, self).add_prefix(field_name)
 
     def clean_email(self):
         email = self.cleaned_data["email"]
